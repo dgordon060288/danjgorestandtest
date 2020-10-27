@@ -10,4 +10,3 @@ class User(models.Model):
 
     def get_absolute_url(self):
         return reverse("user:user-detail", kwargs={"pk" : self.pk})
-    
