@@ -105,3 +105,27 @@ class UserTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(json.loads(response.content), {'firstName' : 'testFirst', 'lastName' : 'testLast',
         'ssn' : '987654321', 'age' : 30})
+    
+    def test_update_users(self):
+        #add user
+        url = reverse('user:user-api-list')
+        data = {'firstName' : 'testFirst', 'lastName' : 'testLast',
+            'ssn' : '123456789', 'age' : 99}
+        response = self.client.post(url, data)
+
+        #get user
+        url = reverse('user:user-api-detail', kwargs={"pk" : 1})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        #modify user
+        url = reverse('user:user-api-detail', kwargs={"pk" : 1})
+        data = {'firstName' : 'update', 'lastName' : 'update',
+            'ssn' : '111111111', 'age' : 100}
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        #confirm changes
+        url = reverse('user:user-api-detail', kwargs={"pk" : 1})
+        response = self.client.get(url)
+        self.assertEqual(json.loads(response.content), data)
