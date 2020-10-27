@@ -9,5 +9,5 @@ class User(models.Model):
     age = models.IntegerField()
 
     def get_absolute_url(self):
-        return reverse("user:user-list")
+        return reverse("user:user-detail", kwargs={"pk" : self.pk})
     

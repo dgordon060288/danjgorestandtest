@@ -4,9 +4,9 @@
 <ul>
 
 {% for obj in object_list %}
-    <!--<li><a href='{{ obj.get_absolute_url }}'>{{obj.pk}} - -->
-        <li>{{ obj.firstName}} {{obj.lastName }} -  
-        {{ obj.ssn }} - {{ obj.age}} </li> 
+        <li><a href='{{ obj.get_absolute_url }}'>
+            {{ obj.firstName}} {{obj.lastName }} -  
+        {{ obj.ssn }} - {{ obj.age}}</a></li> 
 {% endfor %}
 </ul>
 {% endblock %}
