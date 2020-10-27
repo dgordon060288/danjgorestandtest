@@ -4,7 +4,7 @@ from . models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = [ 'firstName', 'lastName', 'ssn', 'age' ]
+        fields = ['id', 'firstName', 'lastName', 'ssn', 'age']
 
     def validate(self, attrs):
         ssn = attrs.get("ssn")

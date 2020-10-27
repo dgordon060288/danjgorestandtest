@@ -1,24 +1,14 @@
 import json
 
-from django.shortcuts import render
 from django.urls import reverse
 from rest_framework import status
-from django.test import TestCase
-from rest_framework.authtoken.models import Token
-from rest_framework.test import APITestCase, APIClient
+
+from rest_framework.test import APITestCase
 
 from .models import *
 from .serializers import *
-from django.test import Client
-
-
-from rest_framework.test import APIRequestFactory, URLPatternsTestCase
-from rest_framework.test import force_authenticate
-
-from rest_framework.test import APIClient
 
 from django.contrib.auth.models import User
-from django.test.client import Client
 
 class UserTest(APITestCase):
     def setUp(self):
@@ -98,12 +88,12 @@ class UserTest(APITestCase):
         #Assert data is stored correctly
         url = reverse('user:user-api-detail', kwargs={"pk" : 1})
         response = self.client.get(url)
-        self.assertEqual(json.loads(response.content), {'firstName' : 'testFirst', 'lastName' : 'testLast',
+        self.assertEqual(json.loads(response.content), {'id' : 1, 'firstName' : 'testFirst', 'lastName' : 'testLast',
             'ssn' : '123456789', 'age' : 99})
 
         url = reverse('user:user-api-detail', kwargs={"pk" : 2})
         response = self.client.get(url)
-        self.assertEqual(json.loads(response.content), {'firstName' : 'testFirst', 'lastName' : 'testLast',
+        self.assertEqual(json.loads(response.content), {'id' : 2, 'firstName' : 'testFirst', 'lastName' : 'testLast',
         'ssn' : '987654321', 'age' : 30})
     
     def test_update_users(self):
@@ -126,6 +116,30 @@ class UserTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         #confirm changes
+        data = {'id' : 1, 'firstName' : 'update', 'lastName' : 'update',
+            'ssn' : '111111111', 'age' : 100}
         url = reverse('user:user-api-detail', kwargs={"pk" : 1})
         response = self.client.get(url)
         self.assertEqual(json.loads(response.content), data)
+
+    def test_delete_user(self):
+        #add user
+        url = reverse('user:user-api-list')
+        data = {'firstName' : 'testFirst', 'lastName' : 'testLast',
+            'ssn' : '123456789', 'age' : 99}
+        response = self.client.post(url, data)
+
+        #get user
+        url = reverse('user:user-api-detail', kwargs={"pk" : 1})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        #delete user
+        url = reverse('user:user-api-detail', kwargs={"pk" : 1})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        #delete non-existent user
+        url = reverse('user:user-api-detail', kwargs={"pk" : 1})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)    
