@@ -2,13 +2,12 @@ import json
 
 from django.urls import reverse
 from rest_framework import status
-
 from rest_framework.test import APITestCase
 
 from .models import *
 from .serializers import *
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User #THIS MUST BE THE LAST IMPORT - I HAVE NO IDEA WHY
 
 class UserTest(APITestCase):
     def setUp(self):
