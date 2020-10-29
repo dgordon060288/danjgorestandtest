@@ -11,6 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
         age = attrs.get("age")
         if len(ssn) != 9:
             raise serializers.ValidationError("ssn must be 9 digits.")
+        if not ssn.isnumeric():
+            raise serializers.ValidationError("ssn must be numeric.")
         if age > 130 or age < 18:
             raise serializers.ValidationError("age must be between 18 and 130")
         return attrs
